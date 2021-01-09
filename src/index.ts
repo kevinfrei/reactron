@@ -1,3 +1,4 @@
+import concurrently from 'concurrently';
 import minimist from 'minimist';
 import * as process from 'process';
 
@@ -36,7 +37,23 @@ export default function main() {
       'yarn clean && yarn prepare && yarn react-build';
       break;
     case 'start':
-      'yarn prepare && concurrently --kill-others "cross-env BROWSER=none yarn react-start" "wait-on http://localhost:3000 && electron ."';
+      async () => {
+await        concurrently(['yarn prepare']);
+await      concurrently(
+        [
+          'cross-env BROWSER=none yarn react-start',
+          'wait-on http://localhost:3000 && electron .',
+        ],
+        { killOthers: ['failure', 'success'] }
+      );
+      [
+        'yarn prepare',
+        'concurrently --kill-others',
+        [
+          'cross-env BROWSER=none yarn react-start',
+          'wait-on http://localhost:3000 && electron .',
+        ],
+      ];
       break;
     case 'prepare':
       'tsc -p tsconfig.static.json && tsc -p tsconfig.render.json';
