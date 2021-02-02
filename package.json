@@ -23,10 +23,10 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "bin": {
-    "doit": "lib/index.js"
+    "bld": "lib/index.js"
   },
   "scripts": {
-    "thing": "node lib/index.js opt-build",
+    "bld": "node lib/index.js opt-build",
     "test": "jest --config jestconfig.json",
     "build": "rimraf lib && tsc",
     "prepare": "yarn run build",

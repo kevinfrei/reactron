@@ -7,20 +7,25 @@ import shelljs from 'shelljs';
 import Uglify from 'uglify-es';
 import { promises as fsp } from 'fs';
 
-async function optBuild() {
+async function optBuild(args: string[]): Promise<void> {
   const options = {
     toplevel: true,
     compress: {
       passes: 2,
     },
+    mangle: true,
     output: {
       beautify: false,
+      semicolons: false,
+      ecma: 6,
     },
   };
   shelljs.echo('Howdy');
+  // TODO: Run uglify on each file in the build directory
+  // probably check for an option override
   const idx = await fsp.readFile('lib/index.js', 'utf-8');
   const res = Uglify.minify(idx, options);
-  console.log(res);
+  await fsp.writeFile('lib/index.ugl.js', res.code, 'utf-8');
   console.log(`Before: ${idx.length} after ${res.code.length}`);
 }
 
@@ -30,10 +35,9 @@ export default async function main() {
     console.error('Pass a command');
     return;
   }
-  console.log(args._);
   switch (args._[0].toLowerCase()) {
     case 'opt-build':
-      await optBuild();
+      await optBuild(args._);
       break;
     case 'analyze':
       "yarn react-scripts build && yarn source-map-explorer 'build/static/js/*.js'";
