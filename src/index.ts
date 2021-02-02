@@ -1,14 +1,40 @@
+#!/usr/bin/env node
+
 import concurrently from 'concurrently';
 import minimist from 'minimist';
 import * as process from 'process';
+import shelljs from 'shelljs';
+import Uglify from 'uglify-es';
+import { promises as fsp } from 'fs';
 
-export default function main() {
+async function optBuild() {
+  const options = {
+    toplevel: true,
+    compress: {
+      passes: 2,
+    },
+    output: {
+      beautify: false,
+    },
+  };
+  shelljs.echo('Howdy');
+  const idx = await fsp.readFile('lib/index.js', 'utf-8');
+  const res = Uglify.minify(idx, options);
+  console.log(res);
+  console.log(`Before: ${idx.length} after ${res.code.length}`);
+}
+
+export default async function main() {
   const args = minimist(process.argv.slice(2));
   if (args._.length === 0) {
     console.error('Pass a command');
     return;
   }
+  console.log(args._);
   switch (args._[0].toLowerCase()) {
+    case 'opt-build':
+      await optBuild();
+      break;
     case 'analyze':
       "yarn react-scripts build && yarn source-map-explorer 'build/static/js/*.js'";
       break;
@@ -38,22 +64,23 @@ export default function main() {
       break;
     case 'start':
       async () => {
-await        concurrently(['yarn prepare']);
-await      concurrently(
+        await concurrently(['yarn prepare']);
+        await concurrently(
+          [
+            'cross-env BROWSER=none yarn react-start',
+            'wait-on http://localhost:3000 && electron .',
+          ],
+          { killOthers: ['failure', 'success'] }
+        );
         [
-          'cross-env BROWSER=none yarn react-start',
-          'wait-on http://localhost:3000 && electron .',
-        ],
-        { killOthers: ['failure', 'success'] }
-      );
-      [
-        'yarn prepare',
-        'concurrently --kill-others',
-        [
-          'cross-env BROWSER=none yarn react-start',
-          'wait-on http://localhost:3000 && electron .',
-        ],
-      ];
+          'yarn prepare',
+          'concurrently --kill-others',
+          [
+            'cross-env BROWSER=none yarn react-start',
+            'wait-on http://localhost:3000 && electron .',
+          ],
+        ];
+      };
       break;
     case 'prepare':
       'tsc -p tsconfig.static.json && tsc -p tsconfig.render.json';
@@ -86,4 +113,8 @@ await      concurrently(
       'git ls-files|grep "\\.\\(css\\|ts\\|tsx\\)$"|grep -v "__\\|\\.d\\.ts"|xargs wc -l';
       break;
   }
+}
+
+if (require.main === module) {
+  main();
 }
