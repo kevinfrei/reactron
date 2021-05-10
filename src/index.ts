@@ -74,7 +74,7 @@ export default async function main() {
             'cross-env BROWSER=none yarn react-start',
             'wait-on http://localhost:3000 && electron .',
           ],
-          { killOthers: ['failure', 'success'] }
+          { killOthers: ['failure', 'success'] },
         );
         [
           'yarn prepare',
