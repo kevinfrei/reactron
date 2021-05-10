@@ -4,7 +4,7 @@ import concurrently from 'concurrently';
 import minimist from 'minimist';
 import * as process from 'process';
 import shelljs from 'shelljs';
-import Uglify from 'uglify-es';
+import Uglify from 'uglify-js';
 import { promises as fsp } from 'fs';
 
 async function optBuild(args: string[]): Promise<void> {

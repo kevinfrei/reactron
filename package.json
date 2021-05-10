@@ -44,7 +44,7 @@
     "@types/minimist": "^1.2.1",
     "@types/node": "^15.0.2",
     "@types/shelljs": "^0.8.8",
-    "@types/uglify-es": "^3.0.0"
+    "@types/uglify-js": "^3.13.0"
   },
   "husky": {
     "hooks": {
@@ -61,7 +61,7 @@
     "shelljs": "^0.8.4",
     "tsc": "^2.0.3",
     "typescript": "^4.2.4",
-    "uglify-es": "^3.3.9"
+    "uglify-js": "^3.13.5"
   },
   "files": [
     "lib/**/*"
