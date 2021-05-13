@@ -42,7 +42,7 @@
   "devDependencies": {
     "@types/concurrently": "^6.0.1",
     "@types/minimist": "^1.2.1",
-    "@types/node": "^15.0.2",
+    "@types/node": "^15.0.3",
     "@types/shelljs": "^0.8.8",
     "@types/uglify-js": "^3.13.0"
   },
@@ -61,7 +61,7 @@
     "shelljs": "^0.8.4",
     "tsc": "^2.0.3",
     "typescript": "^4.2.4",
-    "uglify-js": "^3.13.5"
+    "uglify-js": "^3.13.6"
   },
   "files": [
     "lib/**/*"
